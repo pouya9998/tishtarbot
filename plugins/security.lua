@@ -56,6 +56,11 @@ if is_chat_msg(msg) or is_super_group(msg) then
 	else
 		username = 'no'
 	end
+	if settings.inline then
+		inline = settings.inline
+	else
+		inline = 'no'
+	end
 	if settings.strict then
 		strict = settings.strict
 	else
@@ -95,6 +100,18 @@ if is_chat_msg(msg) or is_super_group(msg) then
 				end
 			end
 		end
+		
+		
+		
+		
+		local is_inline_msg = msg.text:match("%[(unsupported)%]")
+		if is_inline_msg and lock_inline == "yes" and not is_bot then
+			delete_msg(msg.id, ok_cb, false)
+			if strict == "yes" or to_chat then
+				kick_user(msg.from.id, msg.to.id)
+			end
+		end
+	
 			local is_squig_msg = msg.text:match("[\216-\219][\128-\191]")
 			if is_squig_msg and lock_arabic == "yes" then
 				delete_msg(msg.id, ok_cb, false)

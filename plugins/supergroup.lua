@@ -220,6 +220,39 @@ local function unlock_group_username(msg, data, target)
   end
 end
 
+
+
+
+local function lock_group_inline(msg, data, target)
+  if not is_momod(msg) then
+    return reply_msg(msg.id,"\n", ok_cb, false)
+  end
+  local group_inline_lock = data[tostring(target)]['settings']['inline']
+  if group_inline == 'yes' then
+    return '🔹تبلیغات شیشه ای و هایپرلینک قفل شدند'
+  else
+    data[tostring(target)]['settings']['inline'] = 'yes'
+    save_data(_config.moderation.data, data)
+    return '🔹تبلیغات شیشه ای و هایپرلینک قفل شدند'
+  end
+end
+
+local function unlock_group_inline(msg, data, target)
+  if not is_momod(msg) then
+    return reply_msg(msg.id,"\n", ok_cb, false)
+  end
+  local group_inline_lock = data[tostring(target)]['settings']['inline']
+  if group_inline_lock == 'no' then
+    return '🔹قفل تبلیغات شیشه ای و هایپرلینک غیرفعال شد'
+  else
+    data[tostring(target)]['settings']['inline'] = 'no'
+    save_data(_config.moderation.data, data)
+    return '🔹قفل تبلیغات شیشه ای و هایپرلینک غیرفعال شد'
+  end
+end
+
+
+
 local function lock_group_links(msg, data, target)
   if not is_momod(msg) then
     return
@@ -245,6 +278,106 @@ local function unlock_group_links(msg, data, target)
     data[tostring(target)]['settings']['lock_link'] = 'no'
     save_data(_config.moderation.data, data)
     return '✅ ارسال لینک آزاد شد'
+  end
+end
+
+
+local function lock_group_operator(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local group_operator_lock = data[tostring(target)]['settings']['operator']
+  if group_operator_lock == 'yes' then
+  local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+  return ' 🔐قُفل تبلیغات شارژ(ایرانسل،همراه،رایتل)فعال بود🔒'
+  else
+    return '🔐قُفل تبلیغات شارژ(ایرانسل،همراه،رایتل)فعال بود🔒'
+  end
+  end
+    data[tostring(target)]['settings']['operator'] = 'yes'
+    save_data(_config.moderation.data, data)
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+  return ' 🔐قُفل تبلیغات شارژ(ایرانسل،همراه،رایتل)فعال شد🔒'
+  else
+    return '🔐قُفل تبلیغات شارژ(ایرانسل،همراه،رایتل)فعال شد🔒'
+  end
+end
+local function unlock_group_operator(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local group_operator_lock = data[tostring(target)]['settings']['operator']
+  if group_operator_lock == 'no' then
+  local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+  return ' 🔐قُفل تبلیغات شارژ(ایرانسل،همراه،رایتل)غیرفعال بود🔒'
+  else
+    return '🔐قُفل تبلیغات شارژ(ایرانسل،همراه،رایتل)غیرفعال بود🔒'
+  end
+  end
+    data[tostring(target)]['settings']['operator'] = 'no'
+    save_data(_config.moderation.data, data)
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+  return ' 🔐قُفل تبلیغات شارژ(ایرانسل،همراه،رایتل)غیرفعال شد🔒'
+  else
+    return '🔐قُفل تبلیغات شارژ(ایرانسل،همراه،رایتل)غیرفعال شد🔒'
+  end
+end
+
+local function lock_group_fosh(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local group_fosh_lock = data[tostring(target)]['settings']['fosh']
+  if group_fosh_lock == 'yes' then
+  local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+    return '🔐فیلتږینگ کلماټ +18 دږ سوپږ گږۅه فعاڶ شُده بۅد🔒'
+    else
+    return '🔐فیلتږینگ کلماټ +18 دږ سوپږ گږۅه فعاڶ شُده بۅد🔒'
+  end
+  end
+    data[tostring(target)]['settings']['fosh'] = 'yes'
+    save_data(_config.moderation.data, data)
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+    return '🔐فیلتږینگ کلماټ +18 دږ سوپږ گږۅه فعاڶ شُد🔒'
+    else
+    return '🔐فیلتږینگ کلماټ +18 دږ سوپږ گږۅه فعاڶ شُد🔒'
+  end
+end
+
+local function unlock_group_fosh(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local group_fosh_lock = data[tostring(target)]['settings']['fosh']
+  if group_fosh_lock == 'no' then
+  local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+    return '🔐فیلتږینگ کلماټ +18 دږ سوپږ گږۅه غیږ فعاڶ شُدة بۅڊ🔓'
+  else
+  return '🔐فیلتږینگ کلماټ +18 دږ سوپږ گږۅه غیږ فعاڶ شُدة بۅڊ🔓'
+  end
+  end
+    data[tostring(target)]['settings']['fosh'] = 'no'
+    save_data(_config.moderation.data, data)
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+    return '🔐فیلتږینگ کلماټ +18 دږ سوپږ گږۅه غیږ فعاڶ شُد🔓'
+    else
+    return '🔐فیلتږینگ کلماټ +18 دږ سوپږ گږۅه غیږ فعاڶ شُد🔓'
   end
 end
 
@@ -476,6 +609,113 @@ local function unlock_group_sticker(msg, data, target)
   end
 end
 
+
+
+local function lock_group_fwd(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local group_fwd_lock = data[tostring(target)]['settings']['lock_fwd']
+  if group_fosh_lock == 'yes' then
+  local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+  return ' 🔐قُفل فۅږواږد دږ سوپږ گرۅه فعال بود🔒'
+  else
+    return '🔐قُفل فۅږواږد دږ سوپږ گرۅه فعال بود🔒'
+  end
+  end
+    data[tostring(target)]['settings']['lock_fwd'] = 'yes'
+    save_data(_config.moderation.data, data)
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+    return '🔐قفل فۅږۅاږد دږ سۅپږ گږۅة فعاڶ شُد🔒'
+    else
+    return ' 🔐قفل فۅږۅاږد دږ سۅپږ گږۅة فعاڶ شُد🔒'
+  end
+end
+
+local function unlock_group_fwd(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local group_fwd_lock = data[tostring(target)]['settings']['lock_fwd']
+  if group_fwd_lock == 'no' then
+  local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+    return '🔐قفل فۅږۅاږد دږ سۅپږگږۅة از قبل غیږ فعاڶ شُدہ بۅڍ🔒'
+  else
+  return ' 🔓Fwd is not locked🔓'
+  end
+  end
+    data[tostring(target)]['settings']['lock_fwd'] = 'no'
+    save_data(_config.moderation.data, data)
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+    return '🔐قفل فۅږۅاږد دږ سۅپږ گږۅة غیرفعاڶ شُد🔒'
+    else
+    return ' 🔓Fwd has been unlocked🔓'
+  end
+end
+
+
+
+local function lock_group_cmds(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local group_cmds_lock = data[tostring(target)]['settings']['cmds']
+  if group_cmds_lock == 'yes' then
+  local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+  return '🔐زدن دستورات توسط کاربران قفل شد🔒'
+  else
+    return '🔒Username is already locked🔒'
+  end
+  end
+    data[tostring(target)]['settings']['cmds'] = 'yes'
+    save_data(_config.moderation.data, data)
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+  return '🔐زدن دستورات توسط کاربران قفل شد🔒'
+  else
+    return '🔒Username has been locked🔒'
+  end
+end
+
+local function unlock_group_cmds(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local group_cmds_lock = data[tostring(target)]['settings']['cmds']
+  if group_cmds_lock == 'no' then
+  local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+  return '🔐کاربران میتوانند دستور برای ربات ارسال کنند . فقط دستورات فان🔒'
+  else
+    return '🔓کاربران میتوانند دستور برای ربات ارسال کنند . فقط دستورات فان🔓'
+  end
+  end
+    data[tostring(target)]['settings']['cmds'] = 'no'
+    save_data(_config.moderation.data, data)
+    local hash = 'group:'..msg.to.id
+  local group_lang = redis:hget(hash,'lang')
+  if group_lang then
+  return '🔐کاربران میتوانند دستور برای ربات ارسال کنند . فقط دستورات فان🔒'
+  else
+    return '🔓کاربران میتوانند دستور برای ربات ارسال کنند . فقط دستورات فان🔓'
+  end
+end
+
+
+
+
 local function lock_group_contacts(msg, data, target)
   if not is_momod(msg) then
     return
@@ -637,6 +877,17 @@ function show_supergroup_settingsmod(msg, target)
 		end
 	end
  
+	if data[tostring(target)]['settings'] then
+       if not data[tostring(target)]['settings']['lock_fwd'] then
+              data[tostring(target)]['settings']['lock_fwd'] = 'no'
+        end
+    end
+ 
+	if data[tostring(target)]['settings'] then
+		if not data[tostring(target)]['settings']['inline'] then
+   data[tostring(target)]['settings']['inline'] = 'no'
+		end
+	end
       if data[tostring(target)]['settings'] then
 		if not data[tostring(target)]['settings']['lock_tgservice'] then
 			data[tostring(target)]['settings']['lock_tgservice'] = 'no'
@@ -647,8 +898,57 @@ function show_supergroup_settingsmod(msg, target)
 			data[tostring(target)]['settings']['lock_member'] = 'no'
 		end
 	end
+	if data[tostring(target)]['settings'] then
+		if not data[tostring(target)]['settings']['operator'] then
+			data[tostring(target)]['settings']['operator'] = 'no'
+		end
+	end
+	if data[tostring(target)]['settings'] then
+		if not data[tostring(target)]['settings']['fosh'] then
+			data[tostring(target)]['settings']['fosh'] = 'no'
+		end
+	end
+	if is_muted(tostring(target), 'Audio: yes') then
+		Audio = 'yes'
+	else
+		Audio = 'no'
+	end
+    if is_muted(tostring(target), 'Photo: yes') then
+		Photo = 'yes'
+	else
+		Photo = 'no'
+	end
+   if is_muted(tostring(target), 'Video: yes') then
+		Video = 'yes'
+	else
+		Video = 'no'
+	end
+   if is_muted(tostring(target), 'Gifs: yes') then
+		Gifs = 'yes'
+	else
+		Gifs = 'no'
+	end
+	if is_muted(tostring(target), 'Documents: yes') then
+		Documents = 'yes'
+	else
+		Documents = 'no'
+	end
+	if is_muted(tostring(target), 'Text: yes') then
+		Text = 'yes'
+	else
+		Text = 'no'
+	end
+	if is_muted(tostring(target), 'All: yes') then
+		All = 'yes'
+	else
+		All = 'no'
+	end
+
+
+	
   local settings = data[tostring(target)]['settings']
-  local text = "👼🏻نمایش تنظیمات گروه:\n🔺قفل لینک : "..settings.lock_link.."\n🔺قفل پست رگباری: "..settings.flood.."\n🔺حداکثر پست رگباری : "..NUM_MSG_MAX.."\n🔺قفل اسپم: "..settings.lock_spam.."\n🔺قفل عربی و فارسی: "..settings.lock_arabic.."\n🔺قفل اعضا: "..settings.lock_member.."\n🔺قفل راستچین: "..settings.lock_rtl.."\n🔺قفل استیکر "..settings.lock_sticker.."\n🔺حالت سختگیرانه: "..settings.strict.."\n🔺 قفل یوزر نیم: "..settings.username.."\n🔺  قفل اطلاعات تماس: "..settings.lock_contacts.."\n🔺  قفل پیام ورود کاربر: "..settings.lock_tgservice
+  local text = "⚙نمایش تنظیمات گروه ⚙:\n =============== \n🔒قفل لینک : "..settings.lock_link.."\n🔒قفل پست رگباری: "..settings.flood.."\n🔒حداکثر پست رگباری : "..NUM_MSG_MAX.."\n🔒قفل اسپم: "..settings.lock_spam.."\n🔒قفل عربی و فارسی: "..settings.lock_arabic.."\n🔒قفل اعضا: "..settings.lock_member.."\n🔒قفل راستچین: "..settings.lock_rtl.."\n🔒قفل استیکر: "..settings.lock_sticker.."\n________________ \n🔒حالت سختگیرانه: "..settings.strict.."\n🔒 قفل یوزر نیم: "..settings.username.."\n🔒قفل فوروارد: "..settings.lock_fwd.."\n🔒قفل فحش: "..settings.fosh.."\n🔒قفل اپراتور: "..settings.operator.."\n🔒 قفل اینلاین: "..settings.inline.."\n🔒  قفل اطلاعات تماس: "..settings.lock_contacts.."\n🔒  قفل پیام ورود کاربر: "..settings.lock_tgservice.."\n🔒 قفل متن: "..Text.."\n🔒 قفل موزیک: "..Audio.."\n🔒 قفل ویدیو: "..Video.."\n🔒 قفل فایل: ".. Documents.."\n🔒 قفل عکس: "..Photo.."\n🔒 عکس های متحرک: "..Gifs.."\n🔒 قفل همه: "..All.."\n.."
+
   return text
 end
 
@@ -1752,7 +2052,11 @@ local function run(msg, matches)
 				return lock_group_username(msg, data, target)
 			end
 			
-	
+			if matches[2] == 'inline' then
+				savelog(msg.to.id, name_log.." ["..msg.from.id.."] اینلاین قفل شد  ")
+				return lock_group_inline(msg, data, target)
+			end
+			
 			if matches[2] == 'spam' then
 				savelog(msg.to.id, name_log.." ["..msg.from.id.."] ✅ اسپم قفل است ")
 				return lock_group_spam(msg, data, target)
@@ -1761,9 +2065,21 @@ local function run(msg, matches)
 				savelog(msg.to.id, name_log.." ["..msg.from.id.."] ✅ پست رگباری قفل است ")
 				return lock_group_flood(msg, data, target)
 			end
+			if matches[2] == 'operator'or matches[2] =='اپراتور' then
+				savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked operator")
+				return lock_group_operator(msg, data, target)
+			end
+			if matches[2] == 'fosh'or matches[2] =='فحش' then
+				savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked fosh")
+				return lock_group_fosh(msg, data, target)
+			end
 			if matches[2] == 'arabic' then
 				savelog(msg.to.id, name_log.." ["..msg.from.id.."] ✅ عربی و فارسی قفل است ")
 				return lock_group_arabic(msg, data, target)
+			end
+			if matches[2] == 'cmd' then
+				savelog(msg.to.id, name_log.." ["..msg.from.id.."] دستورات قفل شد")
+				return lock_group_cmds(msg, data, target)
 			end
 			if matches[2] == 'member' then
 				savelog(msg.to.id, name_log.." ["..msg.from.id.."] ✅ اعضا قفل هستند ")
@@ -1772,6 +2088,10 @@ local function run(msg, matches)
 			if matches[2]:lower() == 'rtl' then
 				savelog(msg.to.id, name_log.." ["..msg.from.id.."] ✅ راستچین قفل است")
 				return lock_group_rtl(msg, data, target)
+			end
+			if matches[2] == 'fwd'or matches[2] =='فوروارد' then
+				savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked fwd")
+				return lock_group_fwd(msg, data, target)
 			end
 			if matches[2] == 'tgservice' then
 				savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked Tgservice Actions")
@@ -1807,6 +2127,26 @@ local function run(msg, matches)
 				savelog(msg.to.id, name_log.." ["..msg.from.id.."] یوزر نیم غیرفعال شد")
 				return unlock_group_username(msg, data, target)
 			end
+			if matches[2] == 'fosh'or matches[2] =='فحش' then
+				savelog(msg.to.id, name_log.." ["..msg.from.id.."] unlocked fosh")
+				return unlock_group_fosh(msg, data, target)
+			end
+			if matches[2] == 'operator'or matches[2] =='اپراتور' then
+				savelog(msg.to.id, name_log.." ["..msg.from.id.."] unlocked operator")
+				return unlock_group_operator(msg, data, target)
+			end
+			if matches[2] == 'username' then
+				savelog(msg.to.id, name_log.." ["..msg.from.id.."] یوزر نیم غیرفعال شد")
+				return unlock_group_username(msg, data, target)
+			end
+			if matches[2] == 'fwd'or matches[2] =='فوروارد' then
+				savelog(msg.to.id, name_log.." ["..msg.from.id.."] unlocked fwd")
+				return unlock_group_fwd(msg, data, target)
+			end
+			if matches[2] == 'inline' then
+				savelog(msg.to.id, name_log.." ["..msg.from.id.."] اینلاین غیر فعال شد")
+				return unlock_group_inline(msg, data, target)
+			end
 			
 			if matches[2] == 'spam' then
 				savelog(msg.to.id, name_log.." ["..msg.from.id.."] ❌ اسپم قفل نیست")
@@ -1815,6 +2155,10 @@ local function run(msg, matches)
 			if matches[2] == 'flood' then
 				savelog(msg.to.id, name_log.." ["..msg.from.id.."] ❌ پست رگباری قفل نیست")
 				return unlock_group_flood(msg, data, target)
+			end
+			if matches[2] == 'cmd' then
+				savelog(msg.to.id, name_log.." ["..msg.from.id.."] دستورات قفل نیست")
+				return unlock_group_cmds(msg, data, target)
 			end
 			if matches[2] == 'arabic' then
 				savelog(msg.to.id, name_log.." ["..msg.from.id.."] ❌عربی قفل نیست")
